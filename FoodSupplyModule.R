@@ -27,8 +27,9 @@ lapply(x, library, character.only = TRUE);
 # setwd("H:/Dropbox/Australia/GISERA/SA conventional gas project/projections/")
 # setwd("C:/Users/mar77v/Dropbox/Australia/GISERA/SA conventional gas project/projections/")
 
-setwd("C:/Users/mar77v/Deakin University/LUF Modelling - Trade and Food Demand/domestic_demand/data/")
-setwd("F:/Deakin University/LUF Modelling - Trade and Food Demand/domestic_demand/data/")
+# setwd("C:/Users/mar77v/Deakin University/LUF Modelling - Trade and Food Demand/domestic_demand/data/")
+# setwd("F:/Deakin University/LUF Modelling - Trade and Food Demand/domestic_demand/data/")
+setwd("C:/Users/mar77v/OneDrive - CSIRO/github/FoodDemandAU/")
 
 # -------------------------------------------------------------------------------------------------------
 # Load input data
@@ -379,7 +380,7 @@ for (t in 1961:2013){
     va_ratios$percentage[va_ratios$Year == t] / va_ratios$percentage[va_ratios$Year == t & va_ratios$ItemB == "Oilseeds" ])
 }
 
-sm_factor = 0.05
+sm_factor = 0.01
 
 # Factor to remove variability and isolate long term trends.
 # smooth_fact = seq(0.01, 0.95, 0.05)
@@ -633,7 +634,7 @@ trends = trends %>%
   subset(select = c(Year, ItemB, consumption.kg)) 
 
 oecd.fao = read.csv("oecd-fao meat projection.csv") %>%
-  filter(?..LOCATION == "AUS")%>%
+  filter(LOCATION == "AUS")%>%
   subset(select = c(SUBJECT, TIME, kgpc))
 
 
@@ -660,57 +661,6 @@ merge(trends, oecd.fao, by.x = "Year", by.y = "TIME", all.x = T)
 
 
 merge with Trade projections
-and environmental footprint
-
-
-
-
-
-
-
-
-
-
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+add environmental footprint
 
 
