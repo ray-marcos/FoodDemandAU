@@ -374,12 +374,12 @@ va_ratios$percentage[va_ratios$percentage == 0 ] = 0.0000001
 
 # Fruits is the reference category
 
-for (t in 1990:2013){
+for (t in 1961:2013){
   va_ratios$logratio[va_ratios$Year == t] = log(
     va_ratios$percentage[va_ratios$Year == t] / va_ratios$percentage[va_ratios$Year == t & va_ratios$ItemB == "Oilseeds" ])
 }
 
-sm_factor = 0.30
+sm_factor = 0.05
 
 # Factor to remove variability and isolate long term trends.
 # smooth_fact = seq(0.01, 0.95, 0.05)
@@ -401,14 +401,12 @@ colnames(df) = items
 #   
 for (j in 1:length(items)){
   # declare data as time series
-  # Smooth the time series data to improve the analysis of long term trends
-  sm = lowess(x =  1990:2013, 
-              y = as.numeric(va_ratios$logratio[va_ratios$ItemB == items[j] & va_ratios$Year >=1990]), 
-              f = sm_factor)
+  # Smoothen the time series data to improve the analysis of long term trends
+  sm = lowess(x =  1961:2013, y = as.numeric(va_ratios$logratio[va_ratios$ItemB == items[j]]), f = sm_factor)
   # declare data as ts
-  tmp.ts = ts(sm$y, start = c(1990), end =c(2013), frequency = 1)
+  tmp.ts = ts(sm$y, start = c(1961), end =c(2013), frequency = 1)
   
-  tmp.ts_fit = ets(tmp.ts) # Allows maintaining a trend component
+  tmp.ts_fit = ets(tmp.ts, damped = T) # Allows maintaining a trend component
   # tmp.ts_fit = auto.arima(tmp.ts)
   # Forecast from 2019 to 2035
   # create an automatic variable name which is a fitted model of that industry
@@ -441,15 +439,14 @@ colnames(zjL) = c("Year", "ItemB","percentage")
 
 # the column binding is sticking the two data frames together (they must have the same number of rows)
 
-adval = rbind(as.data.frame(kcal_pct[kcal_pct$Year >= 1990, 
-                                     c("Year", "ItemB","percentage")]),
+adval = rbind(as.data.frame(kcal_pct[,c("Year", "ItemB","percentage")]),
               zjL)
 
 #plot
 advalT_fig = ggplot(adval, aes(x=Year, y=percentage,group=ItemB, color = ItemB)) + 
   geom_line(size = 0.8) + 
   scale_y_continuous(labels = scales::percent) + 
-  scale_x_continuous(breaks=c(1990, 2000, 2020, 2040, 2060)) +
+  scale_x_continuous(breaks=c(1961, 1980, 2000, 2020, 2040, 2060)) +
   scale_color_manual(name=" ", values = mycolors) +
   guides(colour = guide_legend(override.aes = list(size=3))) + 
   ylab("composition of kcal/capita/day") +
