@@ -29,7 +29,7 @@ lapply(x, library, character.only = TRUE);
 
 # setwd("C:/Users/mar77v/Deakin University/LUF Modelling - Trade and Food Demand/domestic_demand/data/")
 # setwd("F:/Deakin University/LUF Modelling - Trade and Food Demand/domestic_demand/data/")
-setwd("C:/Users/mar77v/OneDrive - CSIRO/github/FoodDemandAU/")
+# setwd("C:/Users/mar77v/OneDrive - CSIRO/github/FoodDemandAU/")
 
 # -------------------------------------------------------------------------------------------------------
 # Load input data
@@ -121,12 +121,12 @@ ggsave("Kcal per capita crops, livestock and seafood.tiff",
 
 kcal_pct_item = fs%>%
   filter(Element == "Food supply (kcal/capita/day)") %>%
-  group_by(Year, ItemB ) %>%
+  group_by(Year, ItemC ) %>%
   summarise_if(is.numeric, sum, na.rm = TRUE) %>%
   mutate(percentage = Value / sum(Value)) 
 
 # # Plot
-# ap = ggplot(kcal_pct_item, aes(x=Year, y=percentage, fill=ItemB)) + 
+# ap = ggplot(kcal_pct_item, aes(x=Year, y=percentage, fill=ItemC)) + 
 #   geom_area(alpha=0.6 , size=0.5, colour="grey") +
 #   scale_y_continuous(labels = scales::percent) +
 #   scale_fill_brewer(palette = mycolors ) +
@@ -136,7 +136,7 @@ kcal_pct_item = fs%>%
 # 
 # # Trend lines
 # fs.fao.pl = ggplot(kcal_pct_item, aes(x=Year, y=percentage)) + 
-#   geom_line(aes( color=ItemB)) + 
+#   geom_line(aes( color=ItemC)) + 
 #   scale_y_continuous(labels = scales::percent, limits = c(0,0.3)) +
 #   theme_cowplot() +
 #   ylab("share of kcal/capita/day")
@@ -147,18 +147,18 @@ kcal_pct_item = fs%>%
 
 fs.luf = fs%>%
   filter(Element == "Food supply (kcal/capita/day)") %>%
-  group_by(Year, ItemB ) %>%
+  group_by(Year, ItemC ) %>%
   summarise_if(is.numeric, sum, na.rm = TRUE) %>%
   mutate(percentage = Value / sum(Value)) 
 
 
 # Define the number of colors you want
-nb.cols <- length(unique(fs.luf$ItemB))
+nb.cols <- length(unique(fs.luf$ItemC))
 # mycolors <- colorRampPalette(brewer.pal(8, "Set2"))(nb.cols)
 mycolors <- distinctColorPalette(nb.cols)
 
 # Plot
-fs.luf.pa = ggplot(fs.luf, aes(x=Year, y=percentage, fill=ItemB)) + 
+fs.luf.pa = ggplot(fs.luf, aes(x=Year, y=percentage, fill=ItemC)) + 
   geom_area(alpha=0.6 , size=0.5, colour="grey") +
   scale_y_continuous(labels = scales::percent) +
   scale_fill_manual("Commodity", values  = mycolors) +
@@ -174,7 +174,7 @@ ggsave("Trends in food consumption Area.tiff",
 # Trend lines
 
 fs.luf.pl = ggplot(fs.luf, aes(x=Year, y=percentage)) + 
-  geom_line(aes( color=ItemB)) + 
+  geom_line(aes( color=ItemC)) + 
   scale_y_continuous(labels = scales::percent, limits = c(0,0.3)) +
   scale_color_manual("",values  = mycolors) +
   theme_cowplot() +
@@ -202,12 +202,12 @@ ggplotly(fs.luf.pl)
 # # Change in kcal per capita for crops, livestock and fish products
 # kcal_total = fsa%>%
 #   filter(Element == "Food supply (kcal/capita/day)") %>%
-#   filter(ItemB %in%  c("Grand Total") )
+#   filter(ItemC %in%  c("Grand Total") )
 # # Remove aggregating categories 
 # kcal_pct = fsa%>%
 #   filter(Element == "Food supply (kcal/capita/day)") %>%
-#   filter(!ItemB %in% c("Vegetal Products", "Animal Products", "Grand Total")) %>%
-#   group_by(Year, ItemB ) %>%
+#   filter(!ItemC %in% c("Vegetal Products", "Animal Products", "Grand Total")) %>%
+#   group_by(Year, ItemC ) %>%
 #   summarise_if(is.numeric, sum, na.rm = TRUE) %>%
 #   mutate(percentage = (Value / sum(Value)))
 
@@ -235,11 +235,11 @@ ap = ggplot(kcal_total, aes(x=Year, y=Value)) +
 
 kcal_pct = fs%>%
   filter(Element == "Food supply (kcal/capita/day)") %>%
-  group_by(Year, ItemB ) %>%
+  group_by(Year, ItemC ) %>%
   summarise_if(is.numeric, sum, na.rm = TRUE) %>%
   mutate(percentage = (Value / sum(Value)))
 # 
-# unique(kcal_pct$ItemB)
+# unique(kcal_pct$ItemC)
 # Check that the percents add up to 1
 kcal_pct[,c("Year", "percentage")] %>% group_by(Year) %>%
   summarise_if(is.numeric, sum, na.rm = TRUE)
@@ -248,7 +248,7 @@ kcal_pct[,c("Year", "percentage")] %>% group_by(Year) %>%
 # Plot
 
 # # area chart
-# ap = ggplot(kcal_pct, aes(x=Year, y=percentage, fill=ItemB)) +
+# ap = ggplot(kcal_pct, aes(x=Year, y=percentage, fill=ItemC)) +
 #   geom_bar(position="fill", stat="identity") +
 #   scale_fill_manual(values = mycolors) +
 #   theme_cowplot() +
@@ -258,7 +258,7 @@ kcal_pct[,c("Year", "percentage")] %>% group_by(Year) %>%
 
 # # Trend lines
 # ap = ggplot(kcal_pct, aes(x=Year, y=percentage)) +
-#   geom_line(aes( color=ItemB)) +
+#   geom_line(aes( color=ItemC)) +
 #   scale_y_continuous(labels = scales::percent, limits = c(0,0.3)) +
 #   scale_color_manual(values  = mycolors) +
 #   theme_cowplot() +
@@ -368,7 +368,7 @@ write.csv(df_, "projected total kcal-capita-day.csv", row.names = F)
 # -----------------------------------------------------------------------------------------------------------------
 
 # Create the log of the ratios
-va_ratios = kcal_pct[, c("Year", "ItemB", "Value", "percentage")]
+va_ratios = kcal_pct[, c("Year", "ItemC", "Value", "percentage")]
 va_ratios$logratio = 9999
 
 va_ratios$percentage[va_ratios$percentage == 0 ] = 0.0000001
@@ -377,7 +377,7 @@ va_ratios$percentage[va_ratios$percentage == 0 ] = 0.0000001
 
 for (t in 1961:2013){
   va_ratios$logratio[va_ratios$Year == t] = log(
-    va_ratios$percentage[va_ratios$Year == t] / va_ratios$percentage[va_ratios$Year == t & va_ratios$ItemB == "Oilseeds" ])
+    va_ratios$percentage[va_ratios$Year == t] / va_ratios$percentage[va_ratios$Year == t & va_ratios$ItemC == "Oilseeds" ])
 }
 
 sm_factor = 0.01
@@ -386,7 +386,7 @@ sm_factor = 0.01
 # smooth_fact = seq(0.01, 0.95, 0.05)
 # smooth_fact = c(0.01)
 
-items = unique(va_ratios$ItemB)
+items = unique(va_ratios$ItemC)
 items = items[items != "Oilseeds"]
 # 
 # # # Create empty dataframe to store the point forecasts
@@ -403,7 +403,7 @@ colnames(df) = items
 for (j in 1:length(items)){
   # declare data as time series
   # Smoothen the time series data to improve the analysis of long term trends
-  sm = lowess(x =  1961:2013, y = as.numeric(va_ratios$logratio[va_ratios$ItemB == items[j]]), f = sm_factor)
+  sm = lowess(x =  1961:2013, y = as.numeric(va_ratios$logratio[va_ratios$ItemC == items[j]]), f = sm_factor)
   # declare data as ts
   tmp.ts = ts(sm$y, start = c(1961), end =c(2013), frequency = 1)
   
@@ -436,15 +436,15 @@ zj$Year = 2014:2060
 # zjL = melt( as.data.frame(lapply(zj, as.numeric)), id.var = "Year", value.name = "percentage")
 zjL = melt( as.data.frame(zj), id.var = "Year", value.name = "percentage")
 
-colnames(zjL) = c("Year", "ItemB","percentage")
+colnames(zjL) = c("Year", "ItemC","percentage")
 
 # the column binding is sticking the two data frames together (they must have the same number of rows)
 
-adval = rbind(as.data.frame(kcal_pct[,c("Year", "ItemB","percentage")]),
+adval = rbind(as.data.frame(kcal_pct[,c("Year", "ItemC","percentage")]),
               zjL)
 
 #plot
-advalT_fig = ggplot(adval, aes(x=Year, y=percentage,group=ItemB, color = ItemB)) + 
+advalT_fig = ggplot(adval, aes(x=Year, y=percentage,group=ItemC, color = ItemC)) + 
   geom_line(size = 0.8) + 
   scale_y_continuous(labels = scales::percent) + 
   scale_x_continuous(breaks=c(1961, 1980, 2000, 2020, 2040, 2060)) +
@@ -471,8 +471,158 @@ write.csv(zj, paste("Food supply composition projections 2014-2060 ", ".csv",sep
 
 
 # -----------------------------------------------------------------------
-# Combine compositional projections with Kcal projections
+# Combine compositional projections with Kcal projections to create 
 # -----------------------------------------------------------------------
+
+# Per capita, per year, kg consumption
+
+lo95   = 365 * projs$`Lo 95` * zj[, 1:ncol(zj)-1] 
+lo80   = 365 * projs$`Lo 80` * zj[, 1:ncol(zj)-1] 
+trend  = 365 *projs$`Point Forecast` * zj[, 1:ncol(zj)-1] 
+hi80   = 365 * projs$`Hi 80` * zj[, 1:ncol(zj)-1]
+hi95   = 365 *projs$`Hi 95` * zj[, 1:ncol(zj)-1]
+
+# kcals to grams
+# Create conversion coefficients 
+kcal2g = categories %>%
+  group_by(ItemC) %>%
+  summarise_if(is.numeric, mean, na.rm = TRUE) 
+
+commodities = colnames(trend)
+
+# Placeholder dataframes 
+lo95.kgpc = lo95 
+lo80.kgpc = lo80 
+trend.kgpc = trend 
+hi80.kgpc = hi80
+hi95.kgpc = hi95
+
+gr2kg = 1000 
+
+for (commodity in commodities){
+  lo95.kgpc[, commodity] = (lo95[, commodity] / 
+                                as.numeric(kcal2g[kcal2g$ItemC == commodity, "kcals.per.gram"])) / gr2kg
+  lo80.kgpc[, commodity] = (lo80[, commodity] / 
+                                as.numeric(kcal2g[kcal2g$ItemC == commodity, "kcals.per.gram"])) /gr2kg
+  trend.kgpc[, commodity] = (trend[, commodity] / 
+                                 as.numeric(kcal2g[kcal2g$ItemC == commodity, "kcals.per.gram"]))/gr2kg
+  hi80.kgpc[, commodity] = (hi80[, commodity] / 
+                                as.numeric(kcal2g[kcal2g$ItemC == commodity, "kcals.per.gram"])) /gr2kg
+  hi95.kgpc[, commodity] = (hi95[, commodity] / 
+                                as.numeric(kcal2g[kcal2g$ItemC == commodity, "kcals.per.gram"])) /gr2kg
+}
+
+summary(trend.kgpc)
+
+# Historical values
+
+# Consumption
+hist.cons = kcal_pct[, c("Year", "ItemC", "Value", "percentage")]
+hist.cons = merge(hist.cons, hist.pop, by = c("Year"))
+
+# total consumption per day
+kcal_day = read.csv("projected total kcal-capita-day.csv")%>%
+  subset(select = c("year", "historical"))
+
+hist.cons = merge(hist.cons, kcal_day, by.x = "Year", by.y = "year")
+# Checked recovering back the Values column
+hist.cons$hisXpct = hist.cons$historical * hist.cons$percentage
+
+# Add information about kcal per gram
+
+hist.cons = merge(hist.cons, kcal2g, by = "ItemC")
+
+# Total historical consumption per category in kg per capita per year
+hist.cons$hist.kgpc = (365 * 
+                           hist.cons$historical *  
+                           hist.cons$percentage /
+                           hist.cons$kcals.per.gram / 
+                           gr2kg)  
+
+hist.cons$hist.protein = hist.cons$hist.kgpc * hist.cons$proteingrams.per.gram
+hist.cons$hist.fat = hist.cons$hist.kgpc * hist.cons$fatgrams.per.gram
+
+# Add trend projections
+
+trend.kgpc$Year = 2014:2060
+trend.kgpcL =melt( trend.kgpc, id.var = "Year", value.name = "hist.kgpc")
+
+colnames(trend.kgpcL) = c("Year", "ItemC", "hist.kgpc")
+
+trend.kgpcL = merge(trend.kgpcL, kcal2g, by = "ItemC")
+trend.kgpcL$hist.protein = trend.kgpcL$hist.kgpc * trend.kgpcL$proteingrams.per.gram
+trend.kgpcL$hist.fat = trend.kgpcL$hist.kgpc * trend.kgpcL$fatgrams.per.gram
+
+indicators = c("Year", "ItemC", "hist.kgpc", "hist.protein", "hist.fat")
+production = rbind(hist.cons[,indicators], trend.kgpcL[,indicators])
+production = merge(production, pop.hp, by = "Year", all.x = T)
+production = merge(production, categories[, c("ItemC", "kcals.per.gram")], by = "ItemC", all.x = T)
+production = production[order(production$ItemC,production$Year), ]
+production$consumption.kcals = production$hist.kgpc * gr2ton * production$kcals.per.gram
+colnames(production) = c("ItemC", "Year", "consumption.kgpc", "protein.tonnes", "fat.tonnes", "population",
+                         "kcals.per.gram",  "consumption.kcals")
+
+hp.kgpc <- ggplot(production, aes(x=Year, y = consumption.kgpc)) + 
+  ylab("annual Kg per capita") +
+  scale_x_continuous(breaks=c(1961, 1980, 2000, 2020, 2040, 2060)) +
+  geom_line() + 
+  facet_wrap( ~ ItemC, ncol=4, scales="free_y") +
+  theme_cowplot()
+
+# ggplotly(hp.kgpc)
+
+ggsave("Historical and projected annual Kg pc.tiff" , 
+       plot = hp.kgpc, 
+       dpi = 400, width = 300, 
+       height = 350, 
+       units = "mm",
+       compression="lzw", type="cairo")
+
+write.csv(production, paste("historical and projected food supply annual kg pc.csv"), row.names = F)
+
+
+
+
+
+# Compare trend projections with OECD-FAO meat projections
+
+trends = read.csv("historical and projected food supply Medium.series .csv")
+
+
+
+
+
+
+trends$consumption.kg = 1000 * trends$consumption.tonnes/trends$population
+
+
+trends = trends %>%
+  filter(ItemC == "Bovine Meat" |
+           ItemC == "Pigmeat"  |
+           ItemC == "Poultry Meat"   |
+           ItemC == "Mutton & Goat Meat"  ) %>%
+  filter(Year >= 1991)%>%
+  subset(select = c(Year, ItemC, consumption.kg)) 
+
+oecd.fao = read.csv("oecd-fao meat projection.csv") %>%
+  filter(LOCATION == "AUS")%>%
+  subset(select = c(SUBJECT, TIME, kgpc))
+
+
+merge(trends, oecd.fao, by.x = "Year", by.y = "TIME", all.x = T)
+
+
+
+
+
+
+
+
+&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+
+
+
 # Population projections
 pop = read.csv("Projected population, Australia.csv")
 
@@ -497,7 +647,7 @@ for (pop.scen in all.scen){
   # Create conversion coefficients 
   
   kcal2g = categories %>%
-    group_by(ItemB) %>%
+    group_by(ItemC) %>%
     summarise_if(is.numeric, mean, na.rm = TRUE) 
   
   commodities = colnames(trend)
@@ -513,15 +663,15 @@ for (pop.scen in all.scen){
   
   for (commodity in commodities){
     lo95.tonnes[, commodity] = (lo95[, commodity] / 
-                                  as.numeric(kcal2g[kcal2g$ItemB == commodity, "kcals.per.gram"])) / gr2ton
+                                  as.numeric(kcal2g[kcal2g$ItemC == commodity, "kcals.per.gram"])) / gr2ton
     lo80.tonnes[, commodity] = (lo80[, commodity] / 
-                                  as.numeric(kcal2g[kcal2g$ItemB == commodity, "kcals.per.gram"])) /gr2ton
+                                  as.numeric(kcal2g[kcal2g$ItemC == commodity, "kcals.per.gram"])) /gr2ton
     trend.tonnes[, commodity] = (trend[, commodity] / 
-                                   as.numeric(kcal2g[kcal2g$ItemB == commodity, "kcals.per.gram"]))/gr2ton
+                                   as.numeric(kcal2g[kcal2g$ItemC == commodity, "kcals.per.gram"]))/gr2ton
     hi80.tonnes[, commodity] = (hi80[, commodity] / 
-                                  as.numeric(kcal2g[kcal2g$ItemB == commodity, "kcals.per.gram"])) /gr2ton
+                                  as.numeric(kcal2g[kcal2g$ItemC == commodity, "kcals.per.gram"])) /gr2ton
     hi95.tonnes[, commodity] = (hi95[, commodity] / 
-                                  as.numeric(kcal2g[kcal2g$ItemB == commodity, "kcals.per.gram"])) /gr2ton
+                                  as.numeric(kcal2g[kcal2g$ItemC == commodity, "kcals.per.gram"])) /gr2ton
   }
   
   summary(trend.tonnes)
@@ -547,7 +697,7 @@ for (pop.scen in all.scen){
   
   
   # Consumption
-  hist.cons = kcal_pct[, c("Year", "ItemB", "Value", "percentage")]
+  hist.cons = kcal_pct[, c("Year", "ItemC", "Value", "percentage")]
   hist.cons = merge(hist.cons, hist.pop, by = c("Year"))
   
   # total consumption per day
@@ -560,7 +710,7 @@ for (pop.scen in all.scen){
   
   # Add information about kcal per gram
   
-  hist.cons = merge(hist.cons, kcal2g, by = "ItemB")
+  hist.cons = merge(hist.cons, kcal2g, by = "ItemC")
   
   # Total historical consumption per category
   hist.cons$hist.tonnes = (365 * 
@@ -578,26 +728,26 @@ for (pop.scen in all.scen){
   trend.tonnes$Year = 2014:2060
   trend.tonnesL =melt( trend.tonnes, id.var = "Year", value.name = "hist.tonnes")
   
-  colnames(trend.tonnesL) = c("Year", "ItemB", "hist.tonnes")
+  colnames(trend.tonnesL) = c("Year", "ItemC", "hist.tonnes")
   
-  trend.tonnesL = merge(trend.tonnesL, kcal2g, by = "ItemB")
+  trend.tonnesL = merge(trend.tonnesL, kcal2g, by = "ItemC")
   trend.tonnesL$hist.protein = trend.tonnesL$hist.tonnes * trend.tonnesL$proteingrams.per.gram
   trend.tonnesL$hist.fat = trend.tonnesL$hist.tonnes * trend.tonnesL$fatgrams.per.gram
   
-  indicators = c("Year", "ItemB", "hist.tonnes", "hist.protein", "hist.fat")
+  indicators = c("Year", "ItemC", "hist.tonnes", "hist.protein", "hist.fat")
   production = rbind(hist.cons[,indicators], trend.tonnesL[,indicators])
   production = merge(production, pop.hp, by = "Year", all.x = T)
-  production = merge(production, categories[, c("ItemB", "kcals.per.gram")], by = "ItemB", all.x = T)
-  production = production[order(production$ItemB,production$Year), ]
+  production = merge(production, categories[, c("ItemC", "kcals.per.gram")], by = "ItemC", all.x = T)
+  production = production[order(production$ItemC,production$Year), ]
   production$consumption.kcals = production$hist.tonnes * gr2ton * production$kcals.per.gram
-  colnames(production) = c("ItemB", "Year", "consumption.tonnes", "protein.tonnes", "fat.tonnes", "population",
+  colnames(production) = c("ItemC", "Year", "consumption.tonnes", "protein.tonnes", "fat.tonnes", "population",
                            "kcals.per.gram",  "consumption.kcals")
   
   hp.tonnes <- ggplot(production, aes(x=Year, y = consumption.tonnes/1000)) + 
     ylab("1000 Tonnes") +
     scale_x_continuous(breaks=c(1961, 1980, 2000, 2020, 2040, 2060)) +
     geom_line() + 
-    facet_wrap( ~ ItemB, ncol=4, scales="free_y") +
+    facet_wrap( ~ ItemC, ncol=4, scales="free_y") +
     theme_cowplot()
   
   # ggplotly(hp.tonnes)
@@ -613,54 +763,10 @@ for (pop.scen in all.scen){
 
 
 
-# Compare trend projections with OECD-FAO meat projections
-
-trends = read.csv("historical and projected food supply Medium.series .csv")
 
 
 
 
 
-
-trends$consumption.kg = 1000 * trends$consumption.tonnes/trends$population
-
-
-trends = trends %>%
-  filter(ItemB == "Bovine Meat" |
-           ItemB == "Pigmeat"  |
-           ItemB == "Poultry Meat"   |
-           ItemB == "Mutton & Goat Meat"  ) %>%
-  filter(Year >= 1991)%>%
-  subset(select = c(Year, ItemB, consumption.kg)) 
-
-oecd.fao = read.csv("oecd-fao meat projection.csv") %>%
-  filter(LOCATION == "AUS")%>%
-  subset(select = c(SUBJECT, TIME, kgpc))
-
-
-merge(trends, oecd.fao, by.x = "Year", by.y = "TIME", all.x = T)
-
-
-
-
-
-# # compare with historical data Kg per capita per year
-# # 
-# histFAO = fs %>%
-#   filter(Element == "Food supply quantity (kg/capita/yr)") %>%
-#   group_by(Year, ItemB) %>%
-#   summarise_if(is.numeric, mean, na.rm = TRUE)
-# 
-# 
-# 
-# histFAO = merge(histFAO, hist.pop[,c("Year", "pop1000")], by = "Year")
-# 
-# histFAO$tonnesyear = histFAO$Value * histFAO$pop1000
-
-# # These estimates are higher than our results
-
-
-merge with Trade projections
-add environmental footprint
 
 
