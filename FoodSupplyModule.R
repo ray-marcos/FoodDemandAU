@@ -514,11 +514,24 @@ for (commodity in commodities){
 
 summary(trend.kgpc)
 
+
+# Create per capita projection for trend and prediction intervals
+
+
+
+
 # Historical values
 
+# population
 
-
-
+hist.pop = read.csv("Faostat AU population 1950-2018.csv")
+hist.pop = hist.pop %>%
+  filter(Element == "Total Population - Both sexes") %>%
+  filter(Year >= 1961)%>%
+  subset(select = c(Year, Value)) %>%
+  group_by(Year) %>%
+  summarise_if(is.numeric, mean, na.rm = TRUE)
+colnames(hist.pop) = c("Year", "pop1000")
 
 # Consumption
 hist.cons = kcal_pct[, c("Year", "ItemC", "Value", "percentage")]
@@ -559,11 +572,11 @@ trend.kgpcL$hist.fat = trend.kgpcL$hist.kgpc * trend.kgpcL$fatgrams.per.gram
 
 indicators = c("Year", "ItemC", "hist.kgpc", "hist.protein", "hist.fat")
 production = rbind(hist.cons[,indicators], trend.kgpcL[,indicators])
-production = merge(production, pop.hp, by = "Year", all.x = T)
+# production = merge(production, pop.hp, by = "Year", all.x = T)
 production = merge(production, categories[, c("ItemC", "kcals.per.gram")], by = "ItemC", all.x = T)
 production = production[order(production$ItemC,production$Year), ]
 production$consumption.kcals = production$hist.kgpc * gr2ton * production$kcals.per.gram
-colnames(production) = c("ItemC", "Year", "consumption.kgpc", "protein.tonnes", "fat.tonnes", "population",
+colnames(production) = c("ItemC", "Year", "consumption.kgpc", "protein.tonnes", "fat.tonnes", 
                          "kcals.per.gram",  "consumption.kcals")
 
 hp.kgpc <- ggplot(production, aes(x=Year, y = consumption.kgpc)) + 
@@ -583,6 +596,14 @@ ggsave("Historical and projected annual Kg pc.tiff" ,
        compression="lzw", type="cairo")
 
 write.csv(production, paste("historical and projected food supply annual kg pc.csv"), row.names = F)
+
+
+
+
+
+
+
+
 
 
 
