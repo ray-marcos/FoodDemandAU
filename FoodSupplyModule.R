@@ -471,7 +471,7 @@ write.csv(zj, paste("Food supply composition projections 2014-2060 ", ".csv",sep
 
 
 # -----------------------------------------------------------------------
-# Combine compositional projections with Kcal projections to create 
+# Combine compositional projections with Kcal projections 
 # -----------------------------------------------------------------------
 
 # Per capita, per year, kg consumption
@@ -515,6 +515,10 @@ for (commodity in commodities){
 summary(trend.kgpc)
 
 # Historical values
+
+
+
+
 
 # Consumption
 hist.cons = kcal_pct[, c("Year", "ItemC", "Value", "percentage")]
@@ -625,7 +629,6 @@ merge(trends, oecd.fao, by.x = "Year", by.y = "TIME", all.x = T)
 
 # Population projections
 pop = read.csv("Projected population, Australia.csv")
-
 all.scen = c("Low.series", "Medium.series", "High.series", "Zero.net.overseas.migration")
 
 
