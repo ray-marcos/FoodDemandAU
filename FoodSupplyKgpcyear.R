@@ -34,9 +34,10 @@ lapply(x, library, character.only = TRUE);
 # -------------------------------------------------------------------------------------------------------
 # Load input data
 # Food supply primary commodities
-fs.data = read.csv("FAOSTAT Food supply Crops, Livestock and Fish kcal per day.csv", stringsAsFactors = F)
+# fs.data = read.csv("FAOSTAT Food supply Crops, Livestock and Fish kcal per day.csv", stringsAsFactors = F)
+fs.data = read.csv("FAOSTAT_Food supply Crops, Livestock and Fish -- Primary Equivalents.csv", stringsAsFactors = F)
 # Food balance data (it has info of kg/pc /year)
-fb.data = read.csv("FAOSTAT_Food Balances old method.csv", stringsAsFactors = F)
+# fb.data = read.csv("FAOSTAT_Food Balances old method.csv", stringsAsFactors = F)
 # Remove duplicates
 
 duplicates = c( "Groundnuts (in Shell Eq)",
@@ -48,7 +49,7 @@ duplicates = c( "Groundnuts (in Shell Eq)",
                 "Roots & Tuber Dry Equiv"
                 )
 fs.data = fs.data[!fs.data$Item %in% duplicates,]
-fb.data = fb.data[!fb.data$Item %in% duplicates,]
+# fb.data = fb.data[!fb.data$Item %in% duplicates,]
 # unique(fs.data$Element)
 # commodities = unique(fs$Item[fs$Element == "Food supply (kcal/capita/day)"])
 # write.csv(commodities, "categories food demand.csv")
@@ -60,8 +61,8 @@ categories$Considerations = NULL
 fs = merge(fs.data, categories, by = "Item", all.x = T, all.y = F)
 
 # Get Kg pc per year from aggreagated  FAOStat data
-fb = merge(fb.data, categories, by = "Item", all.x = T, all.y = F)
-kg_pc_py =  fb%>%
+# fb = merge(fb.data, categories, by = "Item", all.x = T, all.y = F)
+kg_pc_py =  fs%>%
   filter(Element == "Food supply quantity (kg/capita/yr)") %>%
   group_by(Year, ItemC ) %>%
   subset(select=c("Year", "ItemC", "Value")) %>%
