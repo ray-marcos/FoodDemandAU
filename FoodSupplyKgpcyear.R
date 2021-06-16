@@ -69,35 +69,23 @@ kg_pc_py =  fs%>%
   summarise_if(is.numeric, mean, na.rm = TRUE)
 colnames(kg_pc_py) = c("Year", "ItemC", "Kgpcpy")
 
-
-# # Obtain Kcal per kg from FAOSTAT data
-
-# fb = merge(fb.data, categories, by = "Item", all.x = T, all.y = F)
-# kg_pc_py =  fb%>%
-#   filter(Element == "Food supply quantity (kg/capita/yr)") %>%
-#   group_by(Year, Item ) %>%
-#   subset(select=c("Year", "Item", "Value")) %>%
-#   summarise_if(is.numeric, mean, na.rm = TRUE)
-# colnames(kg_pc_py) = c("Year", "Item", "Kgpcpy")
-# 
-# # kcal per capita per day
-# kcal_pc_py =  fb%>%
-#   filter(Element == "Food supply (kcal/capita/day)") %>%
-#   group_by(Year, Item ) %>%
-#   subset(select=c("Year", "Item", "Value")) %>%
-#   summarise_if(is.numeric, mean, na.rm = TRUE)
-# colnames(kcal_pc_py) = c("Year", "Item", "kcalpcpy")
-# kcal_pc_py$kcalpcpy = kcal_pc_py$kcalpcpy * 365
-# 
-# 
-# # # Merge to get estimate of kcal per gram. The number of commodities is not the same
-# 
-# kcal.per.kg = merge(kcal_pc_py,kg_pc_py,  by = c("Item", "Year"), all.x = T)
+# kcal per capita per day
+kcal_pc_py =  fs%>%
+  filter(Element == "Food supply (kcal/capita/day)") %>%
+  group_by(Year, ItemC ) %>%
+  subset(select=c("Year", "ItemC", "Value")) %>%
+  summarise_if(is.numeric, mean, na.rm = TRUE)
+colnames(kcal_pc_py) = c("Year", "ItemC", "kcalpcpy")
+kcal_pc_py$kcalpcpy = kcal_pc_py$kcalpcpy * 365
+# # # Obtain Kcal per kg from FAOSTAT data
+# # # # Merge to get estimate of kcal per gram. 
+#  
+# kcal.per.kg = merge(kcal_pc_py,kg_pc_py,  by = c("ItemC", "Year"), all.x = T)
 # kcal.per.kg$kcal.per.kg = kcal.per.kg$kcalpcpy/kcal.per.kg$Kgpcpy
-# kcal.per.kg[kcal.per.kg$Item == "Miscellaneous", "kcal.per.kg"] = 2357
+# # kcal.per.kg[kcal.per.kg$Item == "Miscellaneous", "kcal.per.kg"] = 2357
 # 
 # kcal.per.kg.mean = kcal.per.kg%>%
-#   group_by(Item ) %>%
+#   group_by(ItemC ) %>%
 #   summarise_if(is.numeric, mean, na.rm = TRUE)
 
 
