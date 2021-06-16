@@ -69,17 +69,18 @@ kg_pc_py =  fs%>%
   summarise_if(is.numeric, mean, na.rm = TRUE)
 colnames(kg_pc_py) = c("Year", "ItemC", "Kgpcpy")
 
-# kcal per capita per day
-kcal_pc_py =  fs%>%
-  filter(Element == "Food supply (kcal/capita/day)") %>%
-  group_by(Year, ItemC ) %>%
-  subset(select=c("Year", "ItemC", "Value")) %>%
-  summarise_if(is.numeric, mean, na.rm = TRUE)
-colnames(kcal_pc_py) = c("Year", "ItemC", "kcalpcpy")
-kcal_pc_py$kcalpcpy = kcal_pc_py$kcalpcpy * 365
-# # # Obtain Kcal per kg from FAOSTAT data
-# # # # Merge to get estimate of kcal per gram. 
-#  
+# # # # Obtain Kcal per kg from FAOSTAT data
+# # kcal per capita per day
+# kcal_pc_py =  fs%>%
+#   filter(Element == "Food supply (kcal/capita/day)") %>%
+#   group_by(Year, ItemC ) %>%
+#   subset(select=c("Year", "ItemC", "Value")) %>%
+#   summarise_if(is.numeric, mean, na.rm = TRUE)
+# colnames(kcal_pc_py) = c("Year", "ItemC", "kcalpcpy")
+# kcal_pc_py$kcalpcpy = kcal_pc_py$kcalpcpy * 365
+# 
+# # # # # Merge to get estimate of kcal per gram. 
+# #  
 # kcal.per.kg = merge(kcal_pc_py,kg_pc_py,  by = c("ItemC", "Year"), all.x = T)
 # kcal.per.kg$kcal.per.kg = kcal.per.kg$kcalpcpy/kcal.per.kg$Kgpcpy
 # # kcal.per.kg[kcal.per.kg$Item == "Miscellaneous", "kcal.per.kg"] = 2357
@@ -606,7 +607,7 @@ hp.kgpc <- ggplot(fs.kgpc, aes(x=Year, y = trend.kgpc)) +
 
 # ggplotly(hp.kgpc)
 
-ggsave("Annual supply Kg pc 95-80pct pred interval2.tiff" , 
+ggsave("Annual supply Kg pc 95-80pct pred interval.tiff" , 
        plot = hp.kgpc, 
        dpi = 400, width = 300, 
        height = 350, 
