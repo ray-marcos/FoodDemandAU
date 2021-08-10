@@ -39,12 +39,20 @@ hist.pop = hist.pop %>%
 colnames(hist.pop) = c("Year", "pop1000")
 
 # Population projections
+# ABS
 pop = read.csv("Projected population, Australia.csv")
 all.scen = c("Low.series", "Medium.series", "High.series", "Zero.net.overseas.migration")
-
 popsrc = "ABS"
+
+# SSPs
+pop = read.csv("au.population.ssps.csv")
+all.scen = c("SSP1", "SSP2", "SSP3")
+popsrc = "SSPs"
+
 # Historical and projected consumption per capita per year
 kgpcpy = read.csv("food supply annual kg pc trend and bounds 1961-2060.csv", stringsAsFactors = F)
+
+
 
 for (pop.scen in all.scen){
   
@@ -53,7 +61,13 @@ for (pop.scen in all.scen){
   colnames(pop.hp) = c("Year")
   pop.hp$population = 0
   pop.hp$population[1:58] = hist.pop$pop1000 *1000
-  pop.hp$population[59:100] = pop[(pop$Year >=2019 & pop$Year <=2060 ),c(pop.scen)]
+  
+  if (popsrc == "ABS"){
+    pop.hp$population[59:100] = pop[(pop$Year >=2019 & pop$Year <=2060 ),c(pop.scen)]
+  }else if(popsrc == "SSPs"){
+    pop.hp$population[59:90] = pop[(pop$Year >=2019 & pop$Year <=2050 ),c(pop.scen)]
+  }
+  
   
   # Compute total consumption per tonne
   
@@ -91,7 +105,7 @@ for (pop.scen in all.scen){
          dpi = 400, width = 300, height = 350, units = "mm",
          compression="lzw", type="cairo")
 
-  write.csv(fs.tonnes, paste("historical and projected food supply", pop.scen, popsrc, ".csv"), row.names = F)
+  write.csv(fs.tonnes, paste("historical and projected food supply tonnes", pop.scen, popsrc, ".csv"), row.names = F)
 }
 
 
