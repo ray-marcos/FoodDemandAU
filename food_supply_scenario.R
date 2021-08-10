@@ -42,6 +42,7 @@ colnames(hist.pop) = c("Year", "pop1000")
 pop = read.csv("Projected population, Australia.csv")
 all.scen = c("Low.series", "Medium.series", "High.series", "Zero.net.overseas.migration")
 
+popsrc = "ABS"
 # Historical and projected consumption per capita per year
 kgpcpy = read.csv("food supply annual kg pc trend and bounds 1961-2060.csv", stringsAsFactors = F)
 
@@ -86,11 +87,11 @@ for (pop.scen in all.scen){
   
   # ggplotly(hp.tonnes)
 
-  ggsave(paste("Historical data and projections, tonnes,", pop.scen, "population.tiff", sep = " ") , plot = hp.tonnes,
+  ggsave(paste("Historical data and projections, tonnes,", pop.scen, "population", popsrc, ".tiff", sep = " ") , plot = hp.tonnes,
          dpi = 400, width = 300, height = 350, units = "mm",
          compression="lzw", type="cairo")
 
-  write.csv(fs.tonnes, paste("historical and projected food supply", pop.scen, ".csv"), row.names = F)
+  write.csv(fs.tonnes, paste("historical and projected food supply", pop.scen, popsrc, ".csv"), row.names = F)
 }
 
 
