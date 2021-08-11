@@ -59,7 +59,7 @@ for (pop.scen in all.scen){
   # join historical (1961-2018) and projected (2019-1960) population data for scenario X 
   pop.hp = as.data.frame(1961:2060)
   colnames(pop.hp) = c("Year")
-  pop.hp$population = 0
+  pop.hp$population = NaN
   pop.hp$population[1:58] = hist.pop$pop1000 *1000
   
   if (popsrc == "ABS"){
@@ -104,8 +104,19 @@ for (pop.scen in all.scen){
   ggsave(paste("Historical data and projections, tonnes,", pop.scen, "population", popsrc, ".tiff", sep = " ") , plot = hp.tonnes,
          dpi = 400, width = 300, height = 350, units = "mm",
          compression="lzw", type="cairo")
-
+  
+  # Add SPREAD ID
+  fd2spread = read.csv("fd2spread simplified.csv", stringsAsFactors = F)
+  fd2spread = fd2spread[, c( "ItemC", "SPREAD_aggregated")]
+  fd2spread = unique(fd2spread)
+  fs.tonnes = left_join(fs.tonnes, fd2spread, by =  c("ItemC"))
+  
   write.csv(fs.tonnes, paste("historical and projected food supply tonnes", pop.scen, popsrc, ".csv"), row.names = F)
 }
 
 
+
+  
+
+
+  
